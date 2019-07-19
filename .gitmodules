@@ -16,3 +16,7 @@
 [submodule "pack/plugins/start/asyncrun"]
 	path = pack/plugins/start/asyncrun
 	url = https://github.com/skywind3000/asyncrun.vim.git
+[submodule "pack/plugins/start/BufOnly.vim"]
+	path = pack/plugins/start/BufOnly.vim
+	url = git@github.com:Jianfeng-Du/vim-config.git
+	branch = BufOnly

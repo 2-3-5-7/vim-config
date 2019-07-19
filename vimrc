@@ -5,7 +5,9 @@ filetype plugin indent on
 syntax on
 
 set nocompatible
-set shortmess=I
+set shortmess=IO
+"no readonly in vimdiff
+set noro
 
 set number
 set hlsearch
@@ -14,10 +16,11 @@ set ignorecase
 set backspace=indent,eol,start"
 set mouse=inv
 set hidden
+set listchars=tab:→\ ,trail:·,eol:§
 
-"vim.wikia.com/wiki/All_folds_open_when_opening_a_file
-autocmd Syntax c,cpp,vim,xml,html,xhtml setlocal foldmethod=syntax
-autocmd Syntax c,cpp,vim,xml,html,xhtml,perl normal zR
+" vim.wikia.com/wiki/All_folds_open_when_opening_a_file
+"autocmd Syntax c,cpp,vim,xml,html,xhtml setlocal foldmethod=syntax
+"autocmd Syntax c,cpp,vim,xml,html,xhtml,perl normal zR
 
 set showmatch
 set cursorline
@@ -48,14 +51,39 @@ set shiftwidth=4
 "set shiftwidth=8
 "set noexpandtab
 
+" https://vim.fandom.com/wiki/Open_the_last_edited_file
+" Go to last file(s) if invoked without arguments.
+autocmd VimLeave * nested if (!isdirectory($HOME . "/.vim")) |
+    \ call mkdir($HOME . "/.vim") |
+    \ endif |
+    \ execute "mksession! " . $HOME . "/.vim/Session.vim"
+
+autocmd VimEnter * nested if argc() == 0 && filereadable($HOME . "/.vim/Session.vim") |
+    \ execute "source " . $HOME . "/.vim/Session.vim"
+
 "# keymap
 let mapleader=" "
+set pastetoggle=<F2>
+nnoremap <F3> :set list!<CR>
 noremap <F4> :set hlsearch! hlsearch?<CR>
 "noremap <F5> :redir! > vim_keys.txt<CR> \| :silent verbose map<CR> \| :redir END<CR>
-set pastetoggle=<F11>
+
 noremap <leader>a :e #<CR>
+noremap <leader>q :q<cr>
+noremap <leader>m :only<cr>
+noremap <leader>v :bo vert sp<cr>
 noremap <leader>w :bd<cr>
-noremap <leader><c-w> :%bd\|e#\|bd#<cr>
+noremap <leader>e :BufOnly<cr><cr>
+noremap <c-j> 5<c-d>
+noremap <c-k> 5<c-u>
+noremap <leader><leader> <c-w>w
+" https://vim.fandom.com/wiki/Avoid_the_escape_key
+inoremap <Tab> <Esc>`^
+inoremap (  ()<Left>
+inoremap " ""<Left>
+inoremap ' ''<Left>
+inoremap { {<cr>}<Up><End><cr>
+inoremap [ []<Left>
 
 "# LeaderF
 let g:Lf_GtagsAutoGenerate = 1
@@ -64,14 +92,15 @@ let g:Lf_RootMarkers = ['.root', '.svn', '.git']
 let g:Lf_WorkingDirectoryMode = 'Ac'
 let g:Lf_WindowHeight = 0.30
 let g:Lf_HideHelp = 1
-let g:Lf_PreviewResult = {'Gtags':0, 'BufTag':0}
+let g:Lf_PreviewResult = {'Gtags':0, 'BufTag':0, 'Function':1}
 "let g:Lf_StlColorscheme = 'powerline'
-noremap <leader>j :LeaderfMru<CR>
+noremap <leader>g :LeaderfMru<CR>
 noremap <leader>t :Leaderf gtags --result=ctags-mod<CR>
-noremap <leader>g :LeaderfBufTag<CR>
+noremap <leader>j :Leaderf function<CR>
 
 noremap <leader>r :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
 noremap <leader>d :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>s :Leaderf! gtags -g 
 noremap <leader>o :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
 noremap <leader>n :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>p :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
@@ -110,5 +139,4 @@ nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
-nmap <leader><tab> <Plug>AirlineSelectNextTab
 
