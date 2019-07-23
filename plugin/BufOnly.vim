@@ -1,3 +1,4 @@
+" fork from https://github.com/vim-scripts/BufOnly.vim
 " BufOnly.vim  -  Delete all the buffers except the current/named buffer.
 "
 " Copyright November 2003 by Christian J. Robinson <infynity@onewest.net>
@@ -47,8 +48,8 @@ function! BufOnly(buffer, bang)
 		if n != buffer && buflisted(n)
 			if a:bang == '' && getbufvar(n, '&modified')
 				echohl ErrorMsg
-				echomsg 'No write since last change for buffer'
-							\ n '(add ! to override)'
+				"echomsg 'No write since last change for buffer'
+				"			\ n '(add ! to override)'
 				echohl None
 			else
 				silent exe 'bdel' . a:bang . ' ' . n
@@ -61,9 +62,9 @@ function! BufOnly(buffer, bang)
 	endwhile
 
 	if delete_count == 1
-		echomsg delete_count "buffer deleted"
+		"echomsg delete_count "buffer deleted"
 	elseif delete_count > 1
-		echomsg delete_count "buffers deleted"
+		"echomsg delete_count "buffers deleted"
 	endif
 
 endfunction
