@@ -65,8 +65,22 @@ autocmd VimEnter * nested if argc() == 0 && filereadable($HOME . "/.vim/Session.
 let mapleader=" "
 set pastetoggle=<F2>
 nnoremap <F3> :set list!<CR>
-noremap <F4> :set hlsearch! hlsearch?<CR>
-"noremap <F5> :redir! > vim_keys.txt<CR> \| :silent verbose map<CR> \| :redir END<CR>
+nnoremap <F4> :set hlsearch! hlsearch?<CR>
+noremap <F5> :Leaderf gtags --update<CR>
+"noremap <F6> :redir! > vim_keys.txt<CR> \| :silent verbose map<CR> \| :redir END<CR>
+
+let s:mappingsState=1
+inoremap { {<cr>}<Up><End><cr>
+inoremap <F4> <C-o>:call ToggleMappings() <cr>
+"vi.stackexchange.com/questions/15578/how-can-i-toggle-multiple-mappings-on-off-with-a-command
+function! ToggleMappings()
+    if s:mappingsState
+        inoremap { {}<Left>
+    else
+        inoremap { {<cr>}<Up><End><cr>
+    endif
+    let s:mappingsState = !s:mappingsState
+endfunction
 
 noremap <leader>a :e #<CR>
 noremap <leader>q :q<cr>
@@ -82,8 +96,8 @@ inoremap <Tab> <Esc>`^
 inoremap (  ()<Left>
 inoremap " ""<Left>
 inoremap ' ''<Left>
-inoremap { {<cr>}<Up><End><cr>
 inoremap [ []<Left>
+
 
 "# LeaderF
 let g:Lf_GtagsAutoGenerate = 1
@@ -93,6 +107,7 @@ let g:Lf_WorkingDirectoryMode = 'Ac'
 let g:Lf_WindowHeight = 0.30
 let g:Lf_HideHelp = 1
 let g:Lf_PreviewResult = {'Gtags':0, 'BufTag':0, 'Function':1}
+let g:Lf_Gtagsconf = '/home/zack/.vim/gtags.conf'
 "let g:Lf_StlColorscheme = 'powerline'
 noremap <leader>g :LeaderfMru<CR>
 noremap <leader>t :Leaderf gtags --result=ctags-mod<CR>
